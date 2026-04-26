@@ -1,4 +1,4 @@
-// WorkHive — Job Data (served as static file)
+
 const JOBS = [
   { id:1, title:"Senior Frontend Engineer", company:"Stripe", logo:"💳", logoColor:"#635bff20", category:"Engineering", type:"Full-time", location:"San Francisco, CA", remote:"Remote", salary:"₹28–38 LPA", salaryNum:38, description:"Lead the development of Stripe's dashboard UI with React and TypeScript. Work closely with product and design to craft pixel-perfect experiences.", requirements:["5+ years React","TypeScript","GraphQL","Team leadership"], posted:"2 days ago", postedTs:Date.now()-2*86400000 },
   { id:2, title:"Product Designer", company:"Notion", logo:"📝", logoColor:"#00000015", category:"Design", type:"Full-time", location:"New York, NY", remote:"Hybrid", salary:"₹22–30 LPA", salaryNum:30, description:"Shape how knowledge workers interact with Notion. Own end-to-end design for core productivity features used by millions.", requirements:["Figma","3+ years product design","User research","Prototyping"], posted:"1 day ago", postedTs:Date.now()-86400000 },
