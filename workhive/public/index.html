@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorkHive — Job Portal</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">🐝</span>
+      <span class="brand-name">WorkHive</span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="nav-link active" data-page="home">Browse Jobs</a>
+      <a href="#" class="nav-link" data-page="applications">My Applications</a>
+    </div>
+    <div class="nav-stats">
+      <span id="app-count-badge" class="badge">0 Applied</span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home-page">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Find your next chapter</p>
+      <h1 class="hero-title">The right job<br/><em>is waiting for you.</em></h1>
+      <p class="hero-sub">Thousands of opportunities across industries — search, apply, and track everything in one place.</p>
+
+      <div class="search-bar">
+        <div class="search-input-wrap">
+          <i class="fa fa-search search-icon"></i>
+          <input type="text" id="search-input" placeholder="Job title, skill, or company…" autocomplete="off"/>
+        </div>
+        <select id="filter-category" class="filter-select">
+          <option value="">All Categories</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Design">Design</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Finance">Finance</option>
+          <option value="Operations">Operations</option>
+          <option value="Product">Product</option>
+          <option value="Data">Data</option>
+          <option value="Sales">Sales</option>
+        </select>
+        <button class="btn-search" id="search-btn">Search</button>
+      </div>
+
+      <div class="quick-tags">
+        <span class="tag-label">Popular:</span>
+        <button class="quick-tag" data-q="Frontend">Frontend Dev</button>
+        <button class="quick-tag" data-q="Product Manager">Product Manager</button>
+        <button class="quick-tag" data-q="Data Scientist">Data Scientist</button>
+        <button class="quick-tag" data-q="Designer">Designer</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOB LISTINGS -->
+  <section class="listings-section" id="listings-section">
+    <div class="listings-header">
+      <div>
+        <h2 class="listings-title">Available Positions</h2>
+        <p id="result-count" class="result-count">Loading jobs…</p>
+      </div>
+      <div class="sort-row">
+        <label>Sort by:</label>
+        <select id="sort-select">
+          <option value="newest">Newest</option>
+          <option value="salary">Highest Salary</option>
+          <option value="alpha">A–Z</option>
+        </select>
+      </div>
+    </div>
+    <div class="jobs-grid" id="jobs-grid">
+      <div class="skeleton-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </div>
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <div class="empty-icon">🔍</div>
+      <h3>No jobs found</h3>
+      <p>Try a different search term or category.</p>
+    </div>
+  </section>
+
+  <!-- MY APPLICATIONS PAGE -->
+  <section class="applications-page" id="applications-page" style="display:none;">
+    <div class="apps-header">
+      <h2>My Applications</h2>
+      <p class="apps-subtitle">Track and manage everything you've applied to.</p>
+    </div>
+    <div id="apps-list" class="apps-list"></div>
+    <div class="empty-state" id="apps-empty" style="display:none;">
+      <div class="empty-icon">📭</div>
+      <h3>No applications yet</h3>
+      <p>Browse jobs and hit <strong>Apply</strong> to get started!</p>
+      <button class="btn-primary" onclick="showPage('home')">Browse Jobs</button>
+    </div>
+  </section>
+
+  <!-- APPLY MODAL -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="apply-modal">
+      <button class="modal-close" id="modal-close"><i class="fa fa-times"></i></button>
+      <div class="modal-header">
+        <div class="modal-company-logo" id="modal-logo"></div>
+        <div>
+          <h3 id="modal-job-title">Job Title</h3>
+          <p id="modal-company">Company Name</p>
+        </div>
+      </div>
+      <div class="apply-form" id="apply-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="f-name" placeholder="Jane Doe"/>
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="f-email" placeholder="jane@example.com"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="f-phone" placeholder="+91 98765 43210"/>
+          </div>
+          <div class="form-group">
+            <label>Years of Experience *</label>
+            <select id="f-exp">
+              <option value="">Select…</option>
+              <option>0–1 years (Fresher)</option>
+              <option>1–3 years</option>
+              <option>3–5 years</option>
+              <option>5–10 years</option>
+              <option>10+ years</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>LinkedIn / Portfolio URL</label>
+          <input type="url" id="f-link" placeholder="https://linkedin.com/in/…"/>
+        </div>
+        <div class="form-group full">
+          <label>Cover Letter *</label>
+          <textarea id="f-cover" rows="4" placeholder="Tell us why you're the perfect fit…"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Resume Upload</label>
+          <div class="file-drop" id="file-drop">
+            <i class="fa fa-cloud-upload-alt"></i>
+            <span>Drag & drop your resume, or <u>browse</u></span>
+            <input type="file" id="f-resume" accept=".pdf,.doc,.docx" style="opacity:0;position:absolute;inset:0;cursor:pointer;"/>
+            <p id="file-name" class="file-name"></p>
+          </div>
+        </div>
+        <button type="button" class="btn-submit" id="submit-apply">Submit Application</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <footer class="footer">
+    <p>© 2025 WorkHive · Powered by Node.js · No npm needed 🐝</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

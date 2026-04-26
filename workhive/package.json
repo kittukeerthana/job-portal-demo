@@ -1,0 +1,14 @@
+{
+  "name": "workhive-job-portal",
+  "version": "1.0.0",
+  "description": "WorkHive Job Portal Management System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["job", "portal", "node", "no-deps"],
+  "author": "WorkHive",
+  "license": "MIT",
+  "dependencies": {}
+}
