@@ -1,15 +1,10 @@
-// ============================================================
-//  WorkHive — Frontend App (talks to Node.js REST API)
-// ============================================================
 
-const API = '';   // same origin — server serves both static files and API
 
-// ── STATE ──────────────────────────────────────────────────
+const API = '';   
 let allJobs      = [];
 let applications = [];
 let currentJobId = null;
 
-// ── API CALLS ──────────────────────────────────────────────
 async function fetchApplications() {
   const r = await fetch(`${API}/api/applications`);
   applications = await r.json();
@@ -35,7 +30,6 @@ async function deleteApplicationAPI(id) {
   return r.json();
 }
 
-// ── UTILITIES ──────────────────────────────────────────────
 function showToast(msg, type = 'info') {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -56,7 +50,6 @@ function getRemoteTag(remote) {
   return { Remote:'tag-remote', Onsite:'tag-onsite', Hybrid:'tag-hybrid' }[remote] || 'tag-hybrid';
 }
 
-// ── RENDER CARD ────────────────────────────────────────────
 function renderCard(job) {
   const applied = isApplied(job.id);
   return `
@@ -119,7 +112,6 @@ function renderGrid(jobs) {
   });
 }
 
-// ── FILTER & SORT ──────────────────────────────────────────
 function applyFilters() {
   const q   = document.getElementById('search-input').value.toLowerCase().trim();
   const cat = document.getElementById('filter-category').value;
@@ -141,7 +133,6 @@ function applyFilters() {
   renderGrid(jobs);
 }
 
-// ── MODAL ──────────────────────────────────────────────────
 function openModal(jobId) {
   const job = allJobs.find(j => j.id === jobId);
   if (!job) return;
@@ -158,7 +149,6 @@ function openModal(jobId) {
   document.getElementById('modal-job-title').textContent = job.title;
   document.getElementById('modal-company').textContent   = `${job.company} · ${job.location} · ${job.remote}`;
 
-  // reset
   ['f-name','f-email','f-phone','f-link','f-cover'].forEach(id =>
     document.getElementById(id).value = '');
   document.getElementById('f-exp').value      = '';
@@ -174,7 +164,6 @@ function closeModal() {
   currentJobId = null;
 }
 
-// ── SUBMIT ─────────────────────────────────────────────────
 async function submitApplication() {
   const name  = document.getElementById('f-name').value.trim();
   const email = document.getElementById('f-email').value.trim();
@@ -221,7 +210,6 @@ async function submitApplication() {
   }
 }
 
-// ── DELETE ─────────────────────────────────────────────────
 async function deleteApplication(appId) {
   const app = applications.find(a => a.id === appId);
   if (!app) return;
@@ -239,7 +227,7 @@ async function deleteApplication(appId) {
   }
 }
 
-// ── RENDER APPLICATIONS ────────────────────────────────────
+
 const STATUS_LABELS = {
   pending:  { label:'Under Review',   cls:'status-pending'  },
   review:   { label:'Shortlisted',    cls:'status-review'   },
@@ -280,7 +268,6 @@ function renderApplications() {
   }).join('');
 }
 
-// ── PAGE NAV ───────────────────────────────────────────────
 function showPage(page) {
   const homeSections = document.querySelectorAll('.hero, .listings-section');
   const appsPage     = document.getElementById('applications-page');
@@ -297,45 +284,35 @@ function showPage(page) {
   }
 }
 
-// ── BOOT ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
-  // Load jobs from global JOBS array (data.js)
   allJobs = JOBS;
 
-  // Load applications from server
   await fetchApplications();
 
-  // Initial render
   applyFilters();
 
-  // Nav
   document.querySelectorAll('.nav-link').forEach(link =>
     link.addEventListener('click', e => { e.preventDefault(); showPage(link.dataset.page); }));
 
-  // Search
   document.getElementById('search-btn').addEventListener('click', applyFilters);
   document.getElementById('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') applyFilters(); });
   document.getElementById('filter-category').addEventListener('change', applyFilters);
   document.getElementById('sort-select').addEventListener('change', applyFilters);
 
-  // Quick tags
   document.querySelectorAll('.quick-tag').forEach(btn =>
     btn.addEventListener('click', () => {
       document.getElementById('search-input').value = btn.dataset.q;
       applyFilters();
     }));
 
-  // Modal
   document.getElementById('modal-close').addEventListener('click', closeModal);
   document.getElementById('modal-overlay').addEventListener('click', e => {
     if (e.target === document.getElementById('modal-overlay')) closeModal();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  // Submit
   document.getElementById('submit-apply').addEventListener('click', submitApplication);
 
-  // File input
   document.getElementById('f-resume').addEventListener('change', function() {
     document.getElementById('file-name').textContent =
       this.files[0] ? `✓ ${this.files[0].name}` : '';
