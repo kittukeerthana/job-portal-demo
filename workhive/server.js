@@ -1,9 +1,4 @@
-/**
- * WorkHive Job Portal — Node.js Server
- * No npm install needed. Uses only built-in Node.js modules.
- * Run: node server.js
- * Open: http://localhost:3000
- */
+
 
 const http = require('http');
 const fs   = require('fs');
@@ -13,11 +8,10 @@ const url  = require('url');
 const PORT   = 3000;
 const PUBLIC = path.join(__dirname, 'public');
 
-// ── In-memory applications store ──────────────────────────
 let applications = [];
 let nextId = 1;
 
-// ── MIME types ────────────────────────────────────────────
+
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.css':  'text/css',
@@ -28,7 +22,6 @@ const MIME = {
   '.svg':  'image/svg+xml',
 };
 
-// ── Helpers ───────────────────────────────────────────────
 function sendJSON(res, status, data) {
   const body = JSON.stringify(data);
   res.writeHead(status, {
@@ -65,14 +58,11 @@ function serveStatic(res, filePath) {
   });
 }
 
-// ── API Routes ────────────────────────────────────────────
 function handleAPI(req, res, pathname) {
-  // GET /api/applications
   if (req.method === 'GET' && pathname === '/api/applications') {
     return sendJSON(res, 200, applications);
   }
 
-  // POST /api/applications
   if (req.method === 'POST' && pathname === '/api/applications') {
     readBody(req).then(body => {
       const { jobId, jobTitle, company, logo, logoColor, location, remote,
@@ -101,7 +91,6 @@ function handleAPI(req, res, pathname) {
     return;
   }
 
-  // DELETE /api/applications/:id
   const deleteMatch = pathname.match(/^\/api\/applications\/(\d+)$/);
   if (req.method === 'DELETE' && deleteMatch) {
     const id  = parseInt(deleteMatch[1]);
@@ -112,7 +101,6 @@ function handleAPI(req, res, pathname) {
     return sendJSON(res, 200, { success: true, removed });
   }
 
-  // GET /api/jobs (returns static job list)
   if (req.method === 'GET' && pathname === '/api/jobs') {
     fs.readFile(path.join(PUBLIC, 'js', 'data.js'), 'utf8', (err, src) => {
       if (err) return sendJSON(res, 500, { error: 'Could not read jobs.' });
@@ -132,9 +120,7 @@ function handleAPI(req, res, pathname) {
   sendJSON(res, 404, { error: 'API route not found.' });
 }
 
-// ── Main request handler ──────────────────────────────────
 const server = http.createServer((req, res) => {
-  // CORS preflight
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
@@ -147,21 +133,17 @@ const server = http.createServer((req, res) => {
   const parsed   = url.parse(req.url, true);
   const pathname = parsed.pathname;
 
-  // API
   if (pathname.startsWith('/api/')) {
     return handleAPI(req, res, pathname);
   }
 
-  // Static files
   let filePath = path.join(PUBLIC, pathname === '/' ? 'index.html' : pathname);
 
-  // Prevent path traversal
   if (!filePath.startsWith(PUBLIC)) {
     res.writeHead(403);
     return res.end('Forbidden');
   }
 
-  // If directory, serve index.html
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
     filePath = path.join(filePath, 'index.html');
   }
